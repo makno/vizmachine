@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--
+VizMachine
+
+Copyright 2003,2015 by
+DI(FH) Mathias Knoll, MSc
+mathias.knoll-AT-fh-joanneum.at
+
+GNU AFFERO GENERAL PUBLIC LICENSE 
+Version 3, 19 November 2007
+See LICENSE.txt
+-->
+<html>
+	<head>
+		<title>VizMachine</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="css/styles.css" type="text/css">
+	</head>
+	<body>
+
+		<div id="viz" data-ng-app="vizMachine" data-ng-controller="vizController as vctrl">
+			<div id="header">
+				<h1>VizMachine&nbsp;<small>V{{vctrl.version}}</small></h1>
+			</div>
+			<!-- TAB PANEL -->
+			<div role="tabpanel">
+
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="tabu active"><a href="#vizArchitecture" aria-controls="vizArchitecture" role="tab" data-toggle="tab">Architecture</a></li>
+					<li role="presentation"><a class="tabu" href="#vizOpcodes" aria-controls="vizOpcodes" role="tab" data-toggle="tab">Opcodes</a></li>
+					<li role="presentation"><a class="tabu" href="#vizMachine" aria-controls="vizMachine" role="tab" data-toggle="tab">Machine</a></li>
+					<li role="presentation"><a class="tabu" href="#vizAssembler" aria-controls="vizAssembler" role="tab" data-toggle="tab">Program</a></li>
+					<li role="presentation"><a class="tabu" href="#vizScreen" aria-controls="vizScreen" role="tab" data-toggle="tab">Screen</a></li>
+					<li role="presentation"><a class="tabu" href="#vizDownloads" aria-controls="vizDownloads" role="tab" data-toggle="tab">Downloads</a></li>
+					<li role="presentation"><a class="tabu" href="#vizAbout" aria-controls="vizAbout" role="tab" data-toggle="tab">About</a></li>
+				</ul>
+
+				<!-- TAB PANES -->
+				<div class="tab-content">
+				
+					<!-- ARCHITECTURE PANEL -->
+					<div role="tabpanel" class="tab-pane active" id="vizArchitecture">
+					
+						<div class="viz"> 
+							<h2>Architecture</h2>
+							
+							<a href="./downloads/architecture.pdf"  type="application/pdf"  target="_blank"><img id="vizDiagram" src="img/vizmachine.svg" alt="diagram"/></a><br /><br />
+							The machine has <span class="high">16 general-purpose registers</span> with numbers from 0 to F.<br>
+							Each <span class="high">register</span> has a width of <span class="high">one Byte</span>.<br>
+							Any distinct register within the instructions is referenced by 4 Bits. (0000 corresponds to register 0, 0100 to register 4, 1111 to register F ...)<br>
+							The machine utilizes a <span class="high">Main Memory of 256 Bytes</span>.<br>
+							Each memory cell (one Byte) is accessed using an <span class="high">address ranging from 0 to 255</span>(00 to FF hexadecimal).<br>
+							Floating-point values are represented as followed: (from most significant bit downwards): 1 Bit prefix (+/-), 3 Bit Exponent, 4 Bit Mantissa.<br>
+							Each <span class="high">machine instruction</span> has a <span class="high">length of 2 Byte</span> and consists of an <span class="high">Op-Code</span> with <span class="high">4 Bit</span> and an <span class="high">operand-field of 12 Bits</span>.<br>
+							The following description uses the letters R, S, T within the operand for a hexadecimal number, which points to the number of a <span class="high">register</span>.<br>
+							The letters <span class="high">X</span> and <span class="high">Y</span> within the operand point to hexadecimal numbers, which do not represent registers. These represent a <span class="high">hexadecimal value or an address in the memory between 00 and FF</span>.<br>
+							
+						</div>
+					
+					</div>
+					<!-- EOF ARCHITECTURE PANEL -->
+					
+					<!-- OPCODES PANEL -->
+					<div role="tabpanel" class="tab-pane" id="vizOpcodes">
+					
+						<div class="viz"> 
+							<h2>Opcodes</h2>
+							<table class="table table-bordered table-nonfluid" >
+								<tr>
+									<td class="cell_header">Opcode</td>
+									<td class="cell_header">Operand</td>
+									<td class="cell_header">Description</td>
+								</tr>
+									<td>1</td>	<td>RXY</td>	<td><span class="high">LOAD</span> register R with data from memory cell with address XY.</td>
+								</tr>
+								<tr>
+									<td>2</td>	<td>RXY</td>	<td><span class="high">LOAD</span> register R with value of (Bit-pattern) XY.</td>
+								</tr>
+								<tr>
+									<td>3</td>	<td>RXY</td>	<td><span class="high">STORE</span> data from register R in memory cell with address XY.</td>
+								</tr>
+								<tr>
+									<td>4</td>	<td>0RS</td>	<td><span class="high">MOVE</span> data from register R to register S.</td>
+								</tr>
+								<tr>
+									<td>5</td>	<td>RST</td>	<td><span class="high">ADD</span> data from register S and register T (Two Complement Interpretation), saving the result to register R.</td>
+								</tr>
+								<tr>
+									<td>6</td>	<td>RST</td>	<td><span class="high">ADD</span> data from register S and register T (Floating-Point Interpretation), saving the result to register R.</td>
+								</tr>
+								<tr>
+									<td>7</td>	<td>RST</td>	<td><span class="high">OR</span> of Bit pattern from register S and register T, saving the result to register R.</td>
+								</tr>
+								<tr>
+									<td>8</td>	<td>RST</td>	<td><span class="high">AND</span> of Bit pattern from register S and register T, saving the result to register R.</td>
+								</tr>
+								<tr>
+									<td>9</td>	<td>RST</td>	<td><span class="high">XOR</span> of Bit pattern from register S and register T, saving the result to register R.</td>
+								</tr>
+								<tr>
+									<td>A</td>	<td>R0X</td>	<td><span class="high">ROTATE</span> the Bit pattern in register R one Bit to the right, X-times.</td>
+								</tr>
+								<tr>
+									<td>B</td>	<td>RXY</td>	<td><span class="high">JUMP</span> to instruction in memory cell with the address XY, if the data in register R is equal to the data in register 0.</td>
+								</tr>
+								<tr>
+									<td>C</td>	<td>000</td>	<td><span class="high">HALT</span>.</td>
+								</tr>
+								<tr>
+									<td colspan="3" class="cell_header">Extended Set for Vizmachine</td>
+								</tr>
+								<tr>
+									<td>D</td>	<td>XYZ</td>	<td><span class="high">WAIT</span> in milliseconds defined by XYZhex value.</td>
+								</tr>
+								<tr>
+									<td>E</td>	<td>RST</td>	<td><span class="high">WRITE</span> data from register R in memory cell with address given in register T.</td>
+								</tr>
+							</table>
+						</div>
+					
+					</div>
+					<!-- EOF OPCODES PANEL -->
+			
+					<!-- VIZMACHINE PANEL -->
+					<div role="tabpanel" class="tab-pane" id="vizMachine">
+						<!-- VIZMACHINE -->
+						<div class="viz">
+							
+							<h2>Machine</h2>
+						
+							<div class="class="form-group"">
+								<h4><span class="label label-default"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</span>
+								<div class="btn-group btn-group-xs" data-toggle="tooltip" data-original-title="Display cell data in different number models!">
+									<label class="btn btn-default btn-xs" data-ng-model="vctrl.numberformat" btn-radio="'hex'" uncheckable><span data-ng-show="vctrl.numberformat=='hex'" class="glyphicon glyphicon-ok"></span>&nbsp;Hexadecimal&nbsp;</label>
+									<label class="btn btn-default btn-xs" data-ng-model="vctrl.numberformat" btn-radio="'bin'" uncheckable><span data-ng-show="vctrl.numberformat=='bin'" class="glyphicon glyphicon-ok"></span>&nbsp;Binary&nbsp;</label>
+									<label class="btn btn-default btn-xs" data-ng-model="vctrl.numberformat" btn-radio="'dec'" uncheckable><span data-ng-show="vctrl.numberformat=='dec'" class="glyphicon glyphicon-ok"></span>&nbsp;Decimal&nbsp;</label>
+								</div>
+								&nbsp;
+								<button data-toggle="tooltip" data-original-title="Display full amount of digits (0s)" type="button" class="btn btn-default btn-xs" data-ng-model="vctrl.filling" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"><span data-ng-show="vctrl.filling" class="glyphicon glyphicon-ok"></span>&nbsp;Toggle Digits&nbsp;</button>
+								&nbsp;
+								<button data-toggle="tooltip" data-original-title="Reset entire system!" type="button" class="btn btn-default btn-xs" data-ng-click="vctrl.resetAll()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Reset</button>
+								</h4>
+							</div>
+							
+							<table>
+								<tr>
+								
+									<td class="device_icon">
+										<div><img src="img/cpu.png"  width="60px"/></div>
+									</td>
+								
+									<td class="device_frame">
+								
+										<table class="table table-bordered table-nonfluid" >
+											<tr>
+												<td><span data-toggle="tooltip" data-original-title="References to an address in the Main Memory." class="component">PROGRAM&nbsp;COUNTER</span></td>
+												<td class="instruction">
+													<select data-toggle="tooltip" data-original-title="References to an address in the Main Memory." id="program_counter" name="programcounter" data-ng-model="vctrl.viz.cellProgramCounter.data" data-ng-change="vctrl.updateCells();">
+													<option ng-repeat="n in [] | range:0:255" ng-selected="vctrl.viz.cellProgramCounter.data == n" value="{{n}}">{{vctrl.getNumber(n)}}</option>
+													</select>
+												</td>
+												<td>
+													<button data-toggle="tooltip" data-original-title="Set Program Counter to 0." type="button" class="btn btn-default btn-xs" data-ng-click="vctrl.resetProgramCounter()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Reset</button>
+												</td>
+											</tr>
+										</table>
+
+										<table class="table table-bordered table-nonfluid">
+											<tr>
+												<td><span data-toggle="tooltip" data-original-title="Displays current instruction where the Program Counter points to!" class="component">INSTRUCTION&nbsp;REGISTER</span></td>
+												<td class="instruction">
+													<input class="data_row" type="text" value="{{vctrl.vcommand.opcode}}" readonly="readonly" data-toggle="tooltip" data-original-title="{{vctrl.getTooltip(vctrl.vcommand.vcell1)}}"/>
+												</td>
+												<td>
+													<div class="btn-groupbtn-group-xs" role="group" aria-label="..."><nobr>
+														<button data-toggle="tooltip" data-original-title="Run one step (2Bytes)." type="button" class="btn btn-default btn-xs" data-ng-click="vctrl.play(true,'button')"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>&nbsp;Step</button>
+														<button data-toggle="tooltip" data-original-title="Run program until HALT." type="button" data-ng-class="{'btn btn-success btn-xs': vctrl.isStopped(), 'btn btn-danger btn-xs': vctrl.isRunning()}" data-ng-click="vctrl.play(false,'button')"><span data-ng-class="{'glyphicon glyphicon-play': vctrl.isStopped(), 'glyphicon glyphicon-stop': vctrl.isRunning()}" aria-hidden="true"></span>&nbsp;{{vctrl.runtimemode}}</button>
+													</nobr></div>
+												</td>
+											</tr>
+										</table>
+
+
+
+										<table class="table table-bordered table-nonfluid">
+											<tr>
+												<td colspan="16"><span class="component">GENERAL PURPOSE REGISTER</span><span style="float:right;">
+												<button type="button" class="btn btn-default btn-xs" data-ng-click="vctrl.resetRegister()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Reset</button></span></td>
+											</tr>
+											<tr>
+												<td class="data_row" data-ng-repeat="cell in vctrl.viz.cellsRegister" data-ng-class="vctrl.cssCellHeader">R<b>{{$index.toString(16).toUpperCase()}}</b></td>
+											</tr>
+											<tr>
+												<td class="data_row" data-ng-class="cell.css" data-ng-repeat="cell in vctrl.registercells">
+													<input data-ng-class="cell.css" type="text" class="data_row" data-ng-model="cell.Data" data-ng-model-options="{ getterSetter: true}" data-ng-focus="cell.css=vctrl.cssCellActive;" onfocus="this.select();" data-ng-blur="vctrl.updateCells()"/>
+												</td>
+											</tr>
+										</table>
+								
+									</td>
+							
+								</tr>
+								
+								<tr>
+									
+									<td  class="device_icon">
+										<div><img src="img/ram.png" width="60px"/></div>
+									</td>
+						
+									<td class="device_frame">
+
+										<table class="table table-bordered table-nonfluid ">
+											<tr>
+												<td colspan="17"><span class="component">MAIN MEMORY</span><span style="float:right;"><form class="form-inline"><input accept="text/vzm" type="file" on-read-file="vctrl.uploadContent($fileContent)"  style="display:inline;" class="filestyle" data-classButton="btn btn-primary" data-size="xs" data-input="false" data-classIcon="icon-plus" data-iconName="glyphicon-open" data-badge="false" data-buttonText="&nbsp;Upload"/>&nbsp;<a id="vDownload" data-ng-click="vctrl.downloadContent()"><button type="button" class="btn btn-default btn-xs" ><span class="glyphicon glyphicon-save"></span>&nbsp;Download</button></a>&nbsp;<button type="button" class="btn btn-default btn-xs" data-ng-click="vctrl.resetMemory()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Reset</button></form></span></td>
+											</tr>
+											<tr>
+												<td class="data_row" data-ng-class="vctrl.cssCellHeader"></td>
+												<td class="data_row" data-ng-repeat="cell in vctrl.memnumbers"  data-ng-class="cell.css">0<b>{{$index.toString(16).toUpperCase()}}</b></td>
+											</tr>
+											<tr data-ng-repeat="row in vctrl.memcells">
+												<td class="data_row" data-ng-class="vctrl.cssCellHeader">
+												   <b>{{$index.toString(16).toUpperCase()}}</b>0
+												</td>
+												<td class="data_row" data-ng-repeat="cell in row" data-ng-class="cell.css">
+													<input  data-ng-class="cell.css" type="text" class="data_row" data-ng-model="cell.Data" data-ng-model-options="{ getterSetter: true}" data-ng-focus="cell.parent.updateMachine(cell);" onfocus="this.select();"  data-ng-blur="vctrl.updateCells()" data-toggle="tooltip" data-original-title="{{vctrl.getTooltip(cell.vcell)}}"/>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="17">Legend:&nbsp;<span class="legend {{vctrl.cssCellWithProgramAndCounter}}">Program Counter</span>&nbsp;<span class="legend {{vctrl.cssCellWithProgram}}">Program Cells</span>&nbsp;<span class="legend {{vctrl.cssCellWithCode}}">Cells with Data</span>&nbsp;<span class="legend">Empty Cells</span></td>
+											</tr>
+										</table>
+										
+									</td>
+								
+								</tr>
+								
+							</table>
+							
+							
+							<table id="infoInstructions" class="table table-bordered table-nonfluid">
+								<tr>
+									<td colspan="4"><span class="component">COMMAND LOG</span>&nbsp;&nbsp;&nbsp;<span style="float:right;">
+									<button data-toggle="tooltip" data-original-title="Turn log on or off" type="button" class="btn btn-default btn-xs" data-ng-model="vctrl.logtoggle" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"><span data-ng-show="vctrl.logtoggle" class="glyphicon glyphicon-ok"></span>&nbsp;Logging&nbsp;</button>&nbsp;<button type="button" class="btn btn-default btn-xs" data-ng-click="vctrl.resetCommandLog()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Reset</button></span></td>
+								</tr>
+								<tr>
+									<td data-ng-class="vctrl.cssCellHeader">Address</td>
+									<td data-ng-class="vctrl.cssCellHeader">Command</td>
+									<td data-ng-class="vctrl.cssCellHeader">Data</td>
+									<td data-ng-class="vctrl.cssCellHeader">Description</td>	
+								</tr>
+							</table>
+						
+						</div>
+						<!-- EOF VIZMACHINE -->
+					</div>
+					<!-- EOF VIZMACHINE PANEL -->
+					
+					<!-- PROGRAM PANEL -->
+					<div role="tabpanel" class="tab-pane" id="vizAssembler">
+					
+						<div class="viz"> 
+							<h2>Program <small>in Assembler</small></h2>
+							<p>Program Size: <b>{{(vctrl.vcommands.length==0)?0:(vctrl.vcommands.length-1)*2}} Bytes</b><br>
+							<a href="#" data-ng-click="vctrl.resetMemory()">Reset&nbsp;Memory</a></p>
+<pre class="prg_body"><p>Set&nbsp;Starting&nbsp;Point&nbsp;in&nbsp;Memory:&nbsp;<select id="program_counter_assembler" name="programcounter" data-ng-model="vctrl.viz.cellProgramCounter.data" data-ng-change="vctrl.updateMachine();"><option ng-repeat="n in [] | range:0:255" ng-selected="vctrl.viz.cellProgramCounter.data == n" value="{{n}}">{{vctrl.viz.constructor.fillGaps(n.toString(16).toUpperCase(),2)}}</option></select></p></pre>
+<pre class="prg_header"><p>Address&#09; <b>Opcode</b>&#09;Operand&#09;Description</p></pre>						
+<pre class="prg_body"><p data-ng-repeat="cmd in vctrl.vcommands">{{cmd.address.substr(0,2)}}|{{cmd.address.substr(2)}}&#09;<select data-ng-model="cmd.gstCommand" data-ng-model-options="{ getterSetter: true}" data-ng-change="vctrl.updateMachine();"><option data-ng-repeat="cmdtype in vctrl.commandtypes | orderBy:'codeDec'" value="{{cmdtype.codeDec}}" data-ng-selected="cmdtype.codeDec==cmd.gstCommand().codeDec">{{cmdtype.name}}</option></select>&#09;<input type="text" data-ng-model="cmd.gstOperand" data-ng-model-options="{ getterSetter: true,updateOn: 'blur'}" value="{{cmd.opcode.substr(1)}}" width="3em" maxlength="3" style="width:3em;text-align:center;"/>&#09;{{vctrl.getCommandDescription(cmd.command.codeDec,cmd.opcode.substr(1))}}</p></pre>
+							
+						</div>
+					
+					</div>
+					<!-- EOF PROGRAM PANEL -->
+					
+					<!-- ABOUT SCREEN -->
+					<div role="tabpanel" class="tab-pane" id="vizScreen">
+					
+						<div class="viz"> 
+							<h2>Screens</h2>
+							<h3>Display (2x16)</h3>
+							<p>Last 16 addresses of memory wil be displayed as ASCII.</p>
+							<div id="ascii">
+								<div class="ascii_cell" data-ng-repeat="n in [] | range:0:16" style="left:{{n*2}}em;top:0em;">
+									<p class="ascii_number">{{vctrl.getASCII(224+n)}}</p>
+								</div>
+								<div class="ascii_cell_number" data-ng-repeat="n in [] | range:0:16" style="left:{{n*2}}em;top:3em;">
+									<p class="ascii_cell_number_text">{{vctrl.getNumber(224+n)}}</p>
+								</div>
+								<div class="ascii_cell" data-ng-repeat="n in [] | range:0:16" style="left:{{n*2}}em;top:3.7em;">
+									<p class="ascii_number">{{vctrl.getASCII(240+n)}}</p>
+								</div>
+								<div class="ascii_cell_number" data-ng-repeat="n in [] | range:0:16" style="left:{{n*2}}em;top:6.7em;">
+									<p class="ascii_cell_number_text">{{vctrl.getNumber(240+n)}}</p>
+								</div>
+							</div>
+							<h3>Memory Usage</h3>
+							<p>Memory is displayed in grey-scale blocks.</p>
+<pre id="svginfo">
+<b>CELL NUMBER</b> #{{vctrl.screencellnumber}}
+</pre>
+							<svg id="vScreen" class="screen" 
+									data-ng-svgwidth="{{vctrl.getSVGWidth()}}" 
+									data-ng-svgheight="{{vctrl.getSVGHeight()}}" 
+									zoomAndPan="magnify">
+								<rect data-ng-svg
+									data-ng-svgx="{{vctrl.screenGridOffsetX}}" 
+									data-ng-svgy="{{vctrl.screenGridOffsetY}}"
+									data-ng-svgwidth="{{vctrl.getGridWidth()}}" 
+									data-ng-svgheight="{{vctrl.getGridHeight()}}" 
+									style="fill:white;stroke-width:3;stroke:rgb(0,0,0)"/>
+								<g data-ng-repeat="(indexRow,row) in vctrl.memcells">	
+									<rect 
+										id="svgcell-{{cell.vcell.number}}"
+										data-ng-repeat="cell in row" 
+										data-ng-mouseover="vctrl.showSVGInfo(cell);"
+										data-ng-mouseout="vctrl.screencellnumber='';"
+										data-ng-svgx="{{$index*vctrl.screenGridSizeX+vctrl.screenGridOffsetX}}" 
+										data-ng-svgy="{{indexRow*vctrl.screenGridSizeY+vctrl.screenGridOffsetY}}" 
+										data-ng-svgwidth="{{vctrl.screenGridSizeX}}" 
+										data-ng-svgheight="{{vctrl.screenGridSizeY}}" 
+										style="fill:{{cell.Color()}};stroke-width:1;stroke:rgb(150,150,150)" />
+								</g>
+							</svg>
+						</div>		
+					
+					</div>
+					<!-- EOF SCREEN PANEL -->
+					
+					<!-- DOWNLOADS PANEL -->
+					<div role="tabpanel" class="tab-pane" id="vizDownloads">
+					
+						<div class="viz"> 
+							<h2>Downloads</h2>
+							<h3>Vizmachine</h3>
+							Manual (<a href="downloads/manual_en.pdf" download="vizmachine_manual_v{{vctrl.version}}.pdf">en</a>, <a href="downloads/manual_de.pdf" download="vizmachine_anleitung_v{{vctrl.version}}.pdf">de</a>) in PDF
+							<h3>Exercises</h3>
+							Exercises (<a href="downloads/exercises_en.pdf" download="vizmachine_exercisesn.pdf">en</a>, <a href="downloads/exercises_de.pdf" download="vizmachine_aufgaben.pdf">de</a>) in PDF<br> 
+							Solutions for <a href="downloads/aufgabe1.vzm" download="vizmachine_01.vzm">1</a>, <a href="downloads/aufgabe2a.vzm" download="vizmachine_02a.vzm">2a</a>, <a href="downloads/aufgabe2b.vzm" download="vizmachine_02b.vzm">2b</a>, <a href="downloads/aufgabe3.vzm" download="vizmachine_03.vzm">3</a>, <a href="downloads/aufgabe4a.vzm" download="vizmachine_04a.vzm">4a</a>, <a href="downloads/aufgabe4b.vzm" download="vizmachine_04b.vzm">4b</a> as *.vzm dumps.<br>
+							Further exercises using this virtual machine (<a href="downloads/exercises2_en.pdf" download="vizmachine_exercises2.pdf">en</a>, <a href="downloads/exercises2_de.pdf" download="vizmachine_aufgaben2.pdf">de</a>)
+							<h3>Demos</h3>
+							<a href="downloads/demo_screen.vzm" download="vizmachine_demo_jump_wait.vzm">Demo</a> for JUMP and WAIT  as *.vzm dump. (Run program and look at memory usage screen!)<br>
+							<!--<a href="downloads/demo_ascii.vzm" download="vizmachine_demo_ascii.vzm">Demo</a> for ASCII display as *.vzm dump. (Run program and look at ASCII display!)-->
+						</div>
+						
+					</div>
+					<!-- EOF DOWNLOADS PANEL -->
+					
+					<!-- ABOUT PANEL -->
+					<div role="tabpanel" class="tab-pane" id="vizAbout">
+					
+						<div class="viz"> 
+							<h2>About</h2>
+							<br>
+							<h3>VizMachine<sup>V{{vctrl.version}}</sup></h3>
+							GNU AFFERO GENERAL PUBLIC LICENSE <br />
+							Version 3, 19 November 2007<br />
+							<a href="LICENSE.txt" target="_blank">LICENSE.txt</a><br />
+							<br>
+							<img src="img/itplus.png" width="100px" alt="A-Knoll-EDGED"/><br />
+							<br>
+							<b>Copyright (C) 2003-2015 by Mathias Knoll</b><br />
+							Program: <b>DI(FH) Mathias Knoll, MSc</b> Mail: mathias.knoll-AT-fh-joanneum.at<br/>
+							Learning Material / Refining: <b>DI Manfred Pamsl</b> Mail: manfred.pamsl-AT-fh-joanneum.at<br />
+							Architecture Idea from <b>&quot;Computer Science: An Overview (12th Edition)&quot; by Glenn Brookshear &amp; Dennis Brylow</b>
+							<br/><br/>
+							
+							<b>FH JOANNEUM - IT + KAPFENBERG</b><br />
+							<a href="http://fh-joanneum.at/itm" target="_blank">Internet Technology</a> / <a href="http://fh-joanneum.at/swd" target="_blank">Software Design</a><br/>
+							<a href="http://fh-joanneum.at/ase" target="_blank">IT &amp; Mobile Security</a> / <a href="http://fh-joanneum.at/irm" target="_blank">IT-Law &amp; Management</a><br />
+							Werk-VI-Straße 46<br />
+							8605 Kapfenberg, AUSTRIA<br />
+							Tel.: +43 (0)3862 33600-8374<br />
+							Fax: +43 (0)3862 33600-8381<br />
+							E-Mail: <a  href="mailto:itm@fh-joanneum.at">itm@fh-joanneum.at</a><br />
+						</div>
+					
+					</div>
+					<!-- EOF ABOUT PANEL -->
+					
+				</div>
+				<!-- EOF TAB PANES -->
+				
+			</div>
+			<!-- EOF TAB PANEL -->
+			
+		</div>
+		
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/angular-timer.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+		<script type="text/javascript" src="js/snap.svg-min.js"></script>
+		<script type="text/javascript" src="js/FileSaver.min.js"></script>
+		<script type="text/javascript" src="js/vizmachine.js"></script>	
+		<script type="text/javascript" src="js/vizgui.js"></script>
+		<script type="text/javascript" src="js/gui.js"></script>
+
+	</body>
+</html>

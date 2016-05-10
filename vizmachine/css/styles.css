@@ -1,0 +1,284 @@
+/* VizMachine Styles */
+
+html, body {
+	font-family: Arial, Verdana, sans serif;
+	font-size: 12px;
+	margin:0px;
+	padding:0px;
+}
+
+pre.prg_header, pre.prg_body {
+	margin: .2em;
+	padding: .5em;
+}
+
+pre.prg_header {
+	color: darkblue;
+}
+
+pre.prg_header p, pre.prg_body p {
+    -moz-tab-size:    11; /* Firefox 4+ */
+    -o-tab-size:      11; /* Opera 11.5 & 12.1 only */
+    tab-size:         11; /* Chrome 21+, Safari 6.1+, Opera 15+ */
+	margin: 0px;
+}
+
+#drop_zone {
+  border: 2px dashed #bbb;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 25px;
+  text-align: center;
+  font: 20pt bold 'Arial';
+  color: #bbb;
+}
+
+/* COMMON */
+.viz, h1 {
+	margin: 5px;
+	padding: 5px
+}
+
+.viz_program_counter {
+	background-color:#ffaa11;
+}
+
+#program_counter {
+	width:8em;
+}
+
+/* TABLE */
+
+td.instruction {
+	font-weight:bold;
+	font-size:1.2em;
+}
+
+.head_row {
+	width:50px;
+	text-align:right;
+}
+
+.table tbody tr td.data_row{
+padding:3px;
+}
+
+.data_row !important{
+	margin:2px;padding:0px;
+	width:50px; 
+	text-align:center;
+	vertical-align: middle;
+}
+
+/* DEVICES */
+
+.device_icon {
+	vertical-align: top;
+	position: relative;
+	padding-right: 10px;
+	padding-bottom: 20px;
+}
+.device_icon  div {
+	border-style: dashed;
+	border-color: #aaa;
+	border-width: 2px;
+	height: auto;
+}
+
+/* CELLS */
+
+input.data_row {
+	border-style: none; border-width: 0px;
+	max-width: 5em;
+	text-align:center;
+	padding:0px;
+}
+
+.cell_empty{
+    background-color: white;
+}
+
+td.cell_active{
+    background-color: red; /* #ffd2e1; */
+	
+}
+
+input.cell_active {
+	background-color: #c4db9b; /* white */
+}
+
+.cell_with_code{
+    background-color: #a1cfe3;
+}
+
+.cell_with_program{
+    background-color: #c4db9b;
+}
+
+.cell_with_program_and_counter{
+	background-color: #c4db9b;
+    border-color: red;
+	border-width: 2px;
+}
+
+.cell_header {
+    background-color: #909090;
+    color: white;
+	text-align: center;
+}
+
+.table-nonfluid {
+    width: auto !important;
+}
+
+/* PROGRESSBAR */
+
+.progress {
+	margin: 0px;
+}
+
+/* FORMATS */
+
+span.component  {
+    font-weight: normal;
+    font-size:1.25em;
+}
+
+span.legend {
+	border-width: 1px;
+	border-radius: 3px;
+	border-style: solid;
+	padding: 3px;
+	color: #333;
+	font-size: .8em;
+}
+
+span.high {
+	color: #8b0000;
+	font-weight: bold;
+}
+
+/* TABS */
+
+.nav-tabs{
+  background-color:#c4db9b;
+}
+.tab-content{
+    background-color:#FFF;
+    color:#000;
+    padding:5px
+}
+.nav-tabs > li > a{
+	border-width: 1px;
+	border-color: #444;
+	background-color:#eee;
+}
+.nav-tabs > li > a:hover{
+	background-color: #999 !important;
+	border-width: 1px;
+	border-color: #444;
+    color:#fff;
+}
+
+.nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a{
+	background-color: #FFF !important;
+	border-width: 1px;
+	border-bottom-width: 0px;
+	border-color: #444;
+    color:#000;
+}
+
+#header {
+	margin:0px; padding:0px;
+	background-color:#ddd;
+}
+
+#header h1 {
+	background-color:#c4db9b;
+	margin:0px;
+	padding:10px;
+}
+
+/* S V G */
+
+#svginfo{
+	margin: 0; 
+	margin-left: 1rem;
+	width: 30rem;
+}
+
+/* DISPLAY */
+
+#ascii {
+	position: relative;
+	width:32rem;
+	height:7.2rem;
+	margin: 1rem;
+	padding: .25rem;
+	/* background-color:#ddd; */ 
+	outline-color: #333;
+	outline-style: none;
+	outline-width: 0px;
+}
+
+.ascii_cell {
+	position: absolute;
+	display: table;
+	width:2rem;
+	height:3rem;
+	min-height:3rem;
+	max-height:3rem;
+	margin: 0;
+	padding: 0;
+	border-color: #aaa;
+	background-color:#ddd;
+	border-style: solid;
+	border-width: 1px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.ascii_cell_number {
+	position: absolute;
+	display: table;
+	width:2rem;
+	height:.7rem;
+	min-height:.7rem;
+	max-height:.7rem;
+	line-height: .7rem;
+	margin: 0;
+	padding: 0;
+}
+
+.ascii_cell_number_text {
+	vertical-align: middle;
+	text-align: center;
+	font-family: Calibri, Arial, sans serif;
+	font-size:.6rem;
+}
+
+
+@font-face {
+    font-family: ascii1;
+    src: url('../fonts/calculator.ttf');
+}
+
+
+.ascii_number {
+	display: table-cell;
+	margin: 0;
+	padding: 0;
+	height: 3rem;
+	line-height: 3rem;
+	min-height:3rem;
+	max-height:3rem;
+	vertical-align: middle;
+	text-align: center;
+	font-family: ascii1, Arial, sans serif;
+	font-size:3rem;
+	letter-spacing: 0px;
+	font-kerning: none;
+}
+
+
